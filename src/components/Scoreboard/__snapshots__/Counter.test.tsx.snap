@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test click counter should increse the counter when click on the button 1`] = `
+<DocumentFragment>
+  <div
+    class="css-d2q1pa"
+  >
+    001
+  </div>
+</DocumentFragment>
+`;

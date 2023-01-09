@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Level component with props Level renders correctly 1`] = `
+<DocumentFragment>
+  <select
+    class="css-1lpmfg0"
+  >
+    <option
+      class="css-zcmdxr"
+      value="beginner"
+    >
+      beginner
+    </option>
+    <option
+      class="css-zcmdxr"
+      value="intermediat"
+    >
+      intermediat
+    </option>
+    <option
+      class="css-zcmdxr"
+      value="expert"
+    >
+      expert
+    </option>
+  </select>
+</DocumentFragment>
+`;

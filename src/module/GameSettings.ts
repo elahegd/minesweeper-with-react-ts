@@ -1,0 +1,11 @@
+export const GameLevel = ['beginner', 'intermediate', 'expert'] as const;
+
+export type LevelNames = typeof GameLevel[number];
+
+export type Settings = [size: number, bombs: number];
+
+export const GameSettings: Record<LevelNames, Settings> = {
+    'beginner': [9, 10],
+    'intermediate': [16, 44],
+    'expert': [22, 99]
+}

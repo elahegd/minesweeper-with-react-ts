@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GameName renders coreectly get snapshot from GameName component 1`] = `
+<DocumentFragment>
+  <h1
+    class="css-18kvaxm"
+  >
+    Minesweeper
+  </h1>
+</DocumentFragment>
+`;
