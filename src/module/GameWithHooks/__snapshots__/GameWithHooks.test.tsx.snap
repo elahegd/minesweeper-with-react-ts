@@ -41,7 +41,7 @@ exports[`Game with hooks test cases Render game field by default 1`] = `
       <div
         class="css-d2q1pa"
       >
-        undefined
+        0
       </div>
       <div
         class="css-ov1ktg"
@@ -79,7 +79,7 @@ exports[`Game with hooks test cases Render game field by default 1`] = `
       <div
         class="css-d2q1pa"
       >
-        NaN
+        10
       </div>
     </div>
     <div

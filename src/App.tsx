@@ -1,52 +1,79 @@
-import React from 'react';
-import './App.css';
+import React, { FC, Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Route, Link, Routes, Navigate, useSearchParams } from "react-router-dom";
+import { Location } from "history";
 
-import Cell from "./components/Grid/Cell";
-import { Grid } from "./components/Grid/Grid";
-import {Reset} from "./components/Scoreboard/Reset";
-// import { Game } from "./components/Game";
-import { GameWithHooks } from './module/GameWithHooks';
+const GameWithHooks = lazy(() => import("./pages/MinesweeperWithHooks"));
+const Top = lazy(() => import("./components/Top"));
 
-import {CellState, Coords} from './helpers/Field';
-import { incrementNeibours } from "./helpers/CellsManipulator"
-function App() {
-  // const coords: Coords = [1, 1];
-  // const cells: React.ReactElement[] = [];
-  // incrementNeibours([1,2], [[1, 0, 1], [0, 1, 1], [2, 3, 9]]);
-  // for(let cell = CellState.empty; cell <= CellState.weakFlag; cell++) {
-  //   cells.push(<Cell 
-  //     key={cell}
-  //     onClick={() => null} 
-  //     onContextMenu={() => null} 
-  //     coords={coords} 
-  //     children={cell}/>)
-  // }
+export const Navigation: FC = () => {
+    const [query] = useSearchParams();
+    const level = query.get('level') || "";
 
-  return(<div className="App">
-    {/* <Reset onReset={() => null} /> */}
-    {/* {cells} */}
-    {/* <Grid children={[
-        [9, 2, 9, 1, 0, 0, 1, 1, 1, 1, 1, 1],
-        [1, 2, 2, 2, 1, 0, 1, 9, 1, 1, 9, 1],
-        [0, 0, 1, 9, 10, 0, 2, 2, 2, 1, 1, 1],
-        [0, 0, 10, 10, 1, 0, 1, 9, 1, 2, 2, 2],
-        [0, 1, 1, 2, 2, 9, 1, 1, 1, 0, 0, 0],
-        [0, 1, 9, 3, 9, 2, 10, 0, 0, 2, 1, 1],
-        [0, 2, 2, 4, 9, 2, 10, 1, 1, 1, 9, 1],
-        [0, 1, 9, 2, 1, 1, 1, 9, 1, 2, 2, 2],
-        [0, 1, 10, 10, 0, 0, 1, 1, 1, 1, 9, 1],
-        [0, 1, 10, 10, 0, 0, 1, 1, 1, 1, 9, 1],
-        [0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 9, 1],
-        [0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 9, 1],
-      ]} 
-      onClick={() => null} 
-      onContextMenu={() => null} 
-      /> */}
-      {/* <Game /> */}
-      <GameWithHooks />
-  </div>
+    const getLevelParam = (pathname: string): Partial<Location> => {
+        return {
+            pathname,
+            search:  `${
+                level &&
+                `?${new URLSearchParams({
+                  level,
+                }).toString()}`
+              }`
+        }
+    }
 
-  );
+    return (
+        <nav>
+            <ul>
+                <li><Link to={getLevelParam("/")}>Home</Link></li>
+                <li><Link to={getLevelParam("/top")}>Top</Link></li>
+                <li><Link to={getLevelParam("/minesweeper/hooks")}>Game With Hooks</Link></li>
+            </ul>
+        </nav> 
+    )
 }
 
-export default App;
+export const App: FC = () => (
+    <Router>
+        <Navigation />
+        <Routes>
+            <Route
+                index
+                element={<Home />}
+            />
+            <Route path="/minesweeper">    
+                <Route
+                    path="hooks"
+                    element={
+                        <Suspense fallback={<>Loading game with hooks</>}>
+                            <GameWithHooks />
+                        </Suspense>
+                    }
+                >
+                    <Route 
+                        path=":username?"
+                        element={
+                            <Suspense fallback={<>Loading game with hooks</>}>
+                                <GameWithHooks />
+                            </Suspense>
+                        }
+                    >
+                    
+                    </Route>
+                </Route>
+            </Route>
+            <Route
+                path="/top"
+                element={
+                    <Suspense fallback={<>Loading Top....</>}>
+                        <Top feature="Flag" firstAction="ctrl" secondAction="click">Minesweeper with React Hooks special for you: </Top>
+                    </Suspense>
+                }
+            />
+            <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
+);
+
+const Home: FC = () => <h2>Mineisdjf</h2>
+
+  

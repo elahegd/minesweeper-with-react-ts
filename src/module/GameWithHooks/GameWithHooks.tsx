@@ -1,9 +1,10 @@
 import { FC, ChangeEvent, useCallback } from 'react';
+import { useSearchParams } from "react-router-dom";
 
 import { GameArea } from '../../components/Game/GameArea';
 import { GameOver } from '../../components/Game/GameOver';
 import { Grid } from "../../components/Grid/Grid";
-import { Top } from "../../components/Top";
+import  Top  from "../../components/Top";
 import { Scoreboard } from '../../components/Scoreboard';
 
 import { GameLevel, LevelNames } from "../../module/GameSettings";
@@ -11,6 +12,9 @@ import { GameLevel, LevelNames } from "../../module/GameSettings";
 import { useGame } from "../../hooks/useGame";
 
 export const GameWithHooks:FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlLevelParams = (searchParams.get('level') || undefined) as LevelNames;
+
   const { 
     level,
     isGameOver,
@@ -23,13 +27,16 @@ export const GameWithHooks:FC = () => {
     handleChangeLevel,
     onReset,
     handleContextMenu
-  } = useGame();
+  } = useGame(urlLevelParams);
 
   const [, bombs] = setting;
 
   const handleChange = useCallback(
-    ({target: {value: level}}: ChangeEvent<HTMLSelectElement>) => 
-      handleChangeLevel(level as LevelNames), 
+    ({target: {value: level}}: ChangeEvent<HTMLSelectElement>) => {
+      // add query param in the url
+      setSearchParams({level})
+      handleChangeLevel(level as LevelNames);
+      }, 
       // Stryker disable next-line ArrayDeclaration
       []);
 
