@@ -5,7 +5,7 @@ import {GameLayout} from "./GameLayout";
 import { GameArea } from "./GameArea";
 import { GameOver } from './GameOver';
 
-import { Top } from "../Top";
+import Top from "../Top";
 import { Scoreboard } from "../Scoreboard";
 import { Grid } from "../Grid";
 

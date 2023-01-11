@@ -25,8 +25,9 @@ export interface ReturnType {
     handleContextMenu: (coords: Coords) => void,
 }
 
-export const useGame = ():ReturnType => {
-    const { level, setLevel, settings: [size, bombs] } = useSettings();
+export const useGame = (defaultLevel = 'beginner' as LevelNames ):ReturnType => {
+    
+    const { level, setLevel, settings: [size, bombs] } = useSettings(defaultLevel);
 
     const [playerField, setPlayerfield] = useState<Field>(generateFieldWithDefaultState(size, CellState.hidden));
     const [gameField, setGameField] = useState<Field>(fieldGenerator(size, bombs/(size*size)));
@@ -72,7 +73,7 @@ export const useGame = ():ReturnType => {
     const handleReset = ([size, bombs]: [number, number]) => {
       const newgameField = fieldGenerator(size, bombs/(size*size));
       const newPlayerField = generateFieldWithDefaultState(size, CellState.hidden);
-  
+
       setPlayerfield([...newPlayerField]);
       setGameField([...newgameField]);
       setFlagCounter(0);
