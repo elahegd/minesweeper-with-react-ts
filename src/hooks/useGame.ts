@@ -51,7 +51,7 @@ export const useGame = (defaultLevel = 'beginner' as LevelNames ):ReturnType => 
         setPlayerfield([...gameField]);
         setGameLoose();
       }
-    }, [gameIsStarted, isWin, isGameOver, level, flagCounter]);
+    }, [gameIsStarted, isWin, isGameOver, level, flagCounter, playerField, gameField]);
 
     const handleContextMenu = useCallback((coords: Coords) => {
       !gameIsStarted && setInProgress();
@@ -62,7 +62,7 @@ export const useGame = (defaultLevel = 'beginner' as LevelNames ):ReturnType => 
         setGameWin();
       }
       setPlayerfield([...newPlayerField])
-    }, [gameIsStarted, isWin, isGameOver, level, flagCounter])
+    }, [gameIsStarted, isWin, isGameOver, level, flagCounter, playerField, gameField])
   
     const handleChangeLevel = useCallback((level: LevelNames) => {
       const [size, bombs] = setLevel(level);
