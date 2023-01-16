@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 
-import { GameLayout } from '../components/Game';
-import  Top  from "../components/Top";
-import { GameWithUseReducer } from '../module/GameWithRedux';
+import { GameLayout } from '../../components/Game';
+import  Top  from "../../components/Top";
+import { GameWithUseReducer } from '../../module/GameWithRedux';
 
-const MinesweeperWithRedux: FC = () => {
+const MinesweeperWithUseReducer: FC = () => {
     return (
         <GameLayout 
             top={
@@ -18,4 +18,4 @@ const MinesweeperWithRedux: FC = () => {
     );
 }
 
-export default MinesweeperWithRedux;
+export default MinesweeperWithUseReducer;

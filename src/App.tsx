@@ -2,8 +2,8 @@ import React, { FC, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes, Navigate, useSearchParams } from "react-router-dom";
 import { Location } from "history";
 
-const GameWithHooks = lazy(() => import("./pages/MinesweeperWithHooks"));
-const MinesweeperWithRedux = lazy(() => import("./pages/MinesweeperWithRedux"));
+const GameWithHooks = lazy(() => import("./pages/MinesweeperWithHooks/MinesweeperWithHooks"));
+const MinesweeperWithUseReducer = lazy(() => import("./pages/MinesweeperWithUseReducer/MinesweeperWithUseReducer"));
 
 export const Navigation: FC = () => {
     const [query] = useSearchParams();
@@ -66,7 +66,7 @@ export const App: FC = () => (
                     path="usereducer"
                     element={
                         <Suspense fallback={<>Loading game with useReducer</>}>
-                            <MinesweeperWithRedux />
+                            <MinesweeperWithUseReducer />
                         </Suspense>
                     }
                 />

@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 
 import { useParams } from "react-router-dom";
 
-import { GameLayout } from '../components/Game';
-import  Top  from "../components/Top";
-import { GameWithHooks } from '../module/GameWithHooks';
+import { GameLayout } from '../../components/Game';
+import  Top  from "../../components/Top";
+import { GameWithHooks } from '../../module/GameWithHooks';
 
 const MinesweeperWithHooks: FC = () => {
     const { username } = useParams<{ username?: string | undefined }>();
