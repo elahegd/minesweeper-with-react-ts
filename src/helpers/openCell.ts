@@ -1,8 +1,13 @@
 import { getNeigboursItems, checkItemInField } from "./CellsManipulator";
+import { copyField } from "./copyField";
 import { detectSolvedPuzzle } from "./detectSolvedPuzzle";
 import { CellState, Coords, Field } from "./Field";
 
 export const openCell = (coords: Coords, playerField: Field, gameField: Field): [Field, boolean] => {
+    return openCellRecursively(coords, copyField(playerField), gameField);
+}
+
+export const openCellRecursively = (coords: Coords, playerField: Field, gameField: Field): [Field, boolean] => {
     const { bomb, hidden, empty, flag, weakFlag } = CellState;
 
     const [y, x] = coords;
@@ -23,12 +28,12 @@ export const openCell = (coords: Coords, playerField: Field, gameField: Field): 
         
         for (const [y, x] of Object.values(neighbour)) {
             if(checkItemInField([y, x], gameField)) {
-                [playerField] = openCell([y, x], playerField, gameField);
+                [playerField] = openCellRecursively([y, x], playerField, gameField);
             }
         }
     }
     
     const [isSolved] = detectSolvedPuzzle(playerField, gameField)
-    
+ 
     return [playerField, isSolved];
 }
