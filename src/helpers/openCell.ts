@@ -34,6 +34,6 @@ export const openCellRecursively = (coords: Coords, playerField: Field, gameFiel
     }
     
     const [isSolved] = detectSolvedPuzzle(playerField, gameField)
-    
+ 
     return [playerField, isSolved];
 }

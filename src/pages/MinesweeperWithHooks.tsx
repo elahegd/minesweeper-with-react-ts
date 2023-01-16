@@ -7,7 +7,7 @@ import  Top  from "../components/Top";
 import { GameWithHooks } from '../module/GameWithHooks';
 
 const MinesweeperWithHooks: FC = () => {
-    const { username } = useParams<{ username?: string }>();
+    const { username } = useParams<{ username?: string | undefined }>();
 
     return (
         <GameLayout 
