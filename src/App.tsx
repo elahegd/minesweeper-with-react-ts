@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Link, Routes, Navigate, useSearchParams
 import { Location } from "history";
 
 const GameWithHooks = lazy(() => import("./pages/MinesweeperWithHooks"));
-const GameWithRedux = lazy(() => import("./pages/MinesweeperWithRedux"));
+const MinesweeperWithRedux = lazy(() => import("./pages/MinesweeperWithRedux"));
 
 export const Navigation: FC = () => {
     const [query] = useSearchParams();
@@ -26,7 +26,7 @@ export const Navigation: FC = () => {
             <ul>
                 <li><Link to={getLevelParam("/")}>Home</Link></li>
                 <li><Link to={getLevelParam("/minesweeper/hooks")}>Game With Hooks</Link></li>
-                <li><Link to={getLevelParam("/minesweeper/redux")}>Game With Redux</Link></li>
+                <li><Link to={getLevelParam("/minesweeper/usereducer")}>Game With Redcerx</Link></li>
             </ul>
         </nav> 
     )
@@ -63,10 +63,10 @@ export const App: FC = () => (
             </Route>
             <Route path="/minesweeper">    
                 <Route
-                    path="redux"
+                    path="usereducer"
                     element={
-                        <Suspense fallback={<>Loading game with Redux</>}>
-                            <GameWithRedux />
+                        <Suspense fallback={<>Loading game with useReducer</>}>
+                            <MinesweeperWithRedux />
                         </Suspense>
                     }
                 />

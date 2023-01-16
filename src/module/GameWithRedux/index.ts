@@ -1,1 +1,1 @@
-export { GameWithRedux } from "./GameWithRedux";
+export { GameWithUseReducer } from "./GameWithUseReducer/GameWithUseReducer";

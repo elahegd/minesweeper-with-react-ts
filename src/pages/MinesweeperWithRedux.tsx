@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { GameLayout } from '../components/Game';
 import  Top  from "../components/Top";
-import { GameWithRedux } from '../module/GameWithRedux';
+import { GameWithUseReducer } from '../module/GameWithRedux';
 
 const MinesweeperWithRedux: FC = () => {
     return (
@@ -13,7 +13,7 @@ const MinesweeperWithRedux: FC = () => {
                 </Top>
             }
         >
-            <GameWithRedux />
+            <GameWithUseReducer />
         </GameLayout>
     );
 }
