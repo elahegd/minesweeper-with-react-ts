@@ -93,6 +93,6 @@ export const App: FC = () => (
     </Router>
 );
 
-const Home: FC = () => <h2>Mineisdjf</h2>
+export const Home: FC = () => <h2>Mineisdjf</h2>
 
   
