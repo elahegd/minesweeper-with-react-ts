@@ -1,3 +1,3 @@
 export { GameWithUseReducer } from "./GameWithUseReducer/GameWithUseReducer";
 export { GameWithReactRedux } from "./GameWithReactRedux";
-export { reducer, actions} from "./game";
+export { reducer, actions } from "./game";

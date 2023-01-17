@@ -98,7 +98,7 @@ export const recursiveUpdate =
 export const runTimer = 
   (): ThunkAction<void, RootState, unknown, AnyAction> =>
     (dispatch, getState) => {
-      const { isGameStarted, time, isGameOver } = getState().game;
+      const { isGameStarted, time } = getState().game;
   
       if(time === 0 && isGameStarted) {
         dispatch(recursiveUpdate());
