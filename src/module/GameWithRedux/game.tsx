@@ -1,10 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { AnyAction, createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction, ThunkAction } from '@reduxjs/toolkit';
 
 import { CellState, Coords, Field, fieldGenerator, generateFieldWithDefaultState } from "../../helpers/Field";
 import { GameSettings, LevelNames } from "../GameSettings";
 import { openCell as openCellHandler } from "../../helpers/openCell";
 import { setFlag as setFlagHandler } from "../../helpers/setFlag";
+import { RootState } from '../../pages/store';
 
 export interface State {
     level: LevelNames;
@@ -71,6 +72,36 @@ export const { reducer, actions } = createSlice({
 
       },
       reset: ({ level }) => getInitialState(level),
-      changeLevel: (state, { payload }: PayloadAction<LevelNames>) => getInitialState(payload)
+      changeLevel: (state, { payload }: PayloadAction<LevelNames>) => getInitialState(payload),
+      updateTime: (state) => {
+        state.time = state.time + 1;
+      }
     },
-})
+});
+
+// Action creator
+export const recursiveUpdate = 
+  (): ThunkAction<void, RootState, unknown, AnyAction> =>
+    (dispatch, getState) => {
+
+      setTimeout(() => {
+        const { isGameStarted } = getState().game;
+        if(isGameStarted) {
+          dispatch(actions.updateTime());
+          dispatch(recursiveUpdate());
+        }
+      }, 1000);
+
+    }
+
+
+export const runTimer = 
+  (): ThunkAction<void, RootState, unknown, AnyAction> =>
+    (dispatch, getState) => {
+      const { isGameStarted, time, isGameOver } = getState().game;
+  
+      if(time === 0 && isGameStarted) {
+        dispatch(recursiveUpdate());
+      }
+  };
+
