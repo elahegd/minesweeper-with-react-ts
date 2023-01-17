@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { RootState } from "../../../pages/store";
@@ -6,7 +6,7 @@ import { actions } from "../index";
 
 import { GameOver as GameOverComponent } from "../../../components/Game/GameOver";
 
-export const GameOver = () => {
+export const GameOver: FC = () => {
     const dispatch = useDispatch();
 
     const { isWin, isGameOver } = useSelector(({ game: { isWin, isGameOver } }: RootState) => ({
