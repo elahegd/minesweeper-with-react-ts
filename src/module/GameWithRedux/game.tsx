@@ -17,7 +17,8 @@ export interface State {
     settings: [number, number];
     playerField: Field;
     gameField: Field;
-    flagCounter: number
+    flagCounter: number,
+    isTimerRunning: boolean
 }
 
 export const getInitialState = (level: LevelNames = 'beginner') => {
@@ -34,7 +35,8 @@ export const getInitialState = (level: LevelNames = 'beginner') => {
         settings,
         flagCounter: 0,
         playerField: generateFieldWithDefaultState(size, CellState.hidden),
-        gameField: fieldGenerator(size, bombs / (size*size))
+        gameField: fieldGenerator(size, bombs / (size*size)),
+        isTimerRunning:false
     }
 }
 
@@ -75,20 +77,26 @@ export const { reducer, actions } = createSlice({
       changeLevel: (state, { payload }: PayloadAction<LevelNames>) => getInitialState(payload),
       updateTime: (state) => {
         state.time = state.time + 1;
+      },
+      setTimerActive: (state) => {
+        state.isTimerRunning = true;
       }
     },
 });
 
 // Action creator
 export const recursiveUpdate = 
-  (): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (prevGameField: Field): ThunkAction<void, RootState, unknown, AnyAction> =>
     (dispatch, getState) => {
 
       setTimeout(() => {
-        const { isGameStarted } = getState().game;
-        if(isGameStarted) {
+        const { isGameStarted, isTimerRunning, gameField } = getState().game;
+        // Compare the link pointer to the memory
+        const isTheSameGame = gameField === prevGameField;
+        
+        if(isGameStarted && isTimerRunning && isTheSameGame) {
           dispatch(actions.updateTime());
-          dispatch(recursiveUpdate());
+          dispatch(recursiveUpdate(gameField));
         }
       }, 1000);
 
@@ -98,10 +106,11 @@ export const recursiveUpdate =
 export const runTimer = 
   (): ThunkAction<void, RootState, unknown, AnyAction> =>
     (dispatch, getState) => {
-      const { isGameStarted, time } = getState().game;
+      const { isGameStarted, isTimerRunning, gameField } = getState().game;
   
-      if(time === 0 && isGameStarted) {
-        dispatch(recursiveUpdate());
+      if(isGameStarted && !isTimerRunning) {
+        dispatch(actions.setTimerActive());
+        dispatch(recursiveUpdate(gameField));
       }
   };
 

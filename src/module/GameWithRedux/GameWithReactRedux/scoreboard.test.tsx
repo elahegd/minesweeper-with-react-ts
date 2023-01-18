@@ -1,13 +1,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { render, screen } from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { store } from '../../../pages/store';
 
 import { Scoreboard } from './Scoreboard';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import userEvent from '@testing-library/user-event';
 
 jest.mock("react-redux", () => ({
     __esModule: true,
