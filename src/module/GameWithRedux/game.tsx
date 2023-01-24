@@ -1,10 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { AnyAction, createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction, ThunkAction } from '@reduxjs/toolkit';
 
 import { CellState, Coords, Field, fieldGenerator, generateFieldWithDefaultState } from "../../helpers/Field";
 import { GameSettings, LevelNames } from "../GameSettings";
 import { openCell as openCellHandler } from "../../helpers/openCell";
 import { setFlag as setFlagHandler } from "../../helpers/setFlag";
+import { RootState } from '../../pages/store';
 
 export interface State {
     level: LevelNames;
@@ -16,7 +17,8 @@ export interface State {
     settings: [number, number];
     playerField: Field;
     gameField: Field;
-    flagCounter: number
+    flagCounter: number,
+    isTimerRunning: boolean
 }
 
 export const getInitialState = (level: LevelNames = 'beginner') => {
@@ -33,7 +35,8 @@ export const getInitialState = (level: LevelNames = 'beginner') => {
         settings,
         flagCounter: 0,
         playerField: generateFieldWithDefaultState(size, CellState.hidden),
-        gameField: fieldGenerator(size, bombs / (size*size))
+        gameField: fieldGenerator(size, bombs / (size*size)),
+        isTimerRunning:false
     }
 }
 
@@ -71,6 +74,43 @@ export const { reducer, actions } = createSlice({
 
       },
       reset: ({ level }) => getInitialState(level),
-      changeLevel: (state, { payload }: PayloadAction<LevelNames>) => getInitialState(payload)
+      changeLevel: (state, { payload }: PayloadAction<LevelNames>) => getInitialState(payload),
+      updateTime: (state) => {
+        state.time = state.time + 1;
+      },
+      setTimerActive: (state) => {
+        state.isTimerRunning = true;
+      }
     },
-})
+});
+
+// Action creator
+export const recursiveUpdate = 
+  (prevGameField: Field): ThunkAction<void, RootState, unknown, AnyAction> =>
+    (dispatch, getState) => {
+
+      setTimeout(() => {
+        const { isGameStarted, isTimerRunning, gameField } = getState().game;
+        // Compare the link pointer to the memory
+        const isTheSameGame = gameField === prevGameField;
+        
+        if(isGameStarted && isTimerRunning && isTheSameGame) {
+          dispatch(actions.updateTime());
+          dispatch(recursiveUpdate(gameField));
+        }
+      }, 1000);
+
+    }
+
+
+export const runTimer = 
+  (): ThunkAction<void, RootState, unknown, AnyAction> =>
+    (dispatch, getState) => {
+      const { isGameStarted, isTimerRunning, gameField } = getState().game;
+  
+      if(isGameStarted && !isTimerRunning) {
+        dispatch(actions.setTimerActive());
+        dispatch(recursiveUpdate(gameField));
+      }
+  };
+

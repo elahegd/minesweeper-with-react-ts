@@ -1,4 +1,4 @@
-import { reducer, actions, State } from "./game";
+import { reducer, actions, State, runTimer, recursiveUpdate } from "./game";
 import { CellState, Field } from "../../helpers/Field";
 import { GameSettings, LevelNames } from "../GameSettings";
 
@@ -175,5 +175,149 @@ describe("GameWithRedux behaviour", () => {
           expect(nextState.gameField).toHaveLength(16);
           expect(nextState.playerField).toHaveLength(16);
         });
+        it("setTimerActive should switch isTimerRunning", () => {
+            const nextState = reducer(baseInitialState, actions.setTimerActive());
+            expect(nextState.isTimerRunning).toBe(true)
+        })
     });
+
+    describe("Check updateTime", () => {
+        it("Update time from 0", () => {
+            const nextState = reducer(baseInitialState, actions.updateTime());
+          expect(nextState).toEqual(
+            expect.objectContaining({
+              time: 1
+            })
+          );
+        });
+
+        it("Update time from 10", () => {
+            const nextState = reducer({...baseInitialState, time: 10 }, actions.updateTime());
+          expect(nextState).toEqual(
+            expect.objectContaining({
+              time: 11
+            })
+          );
+        })
+    });
+
+    describe("Async actions check", () => {
+        it("Check action runTimer with state {isGameStarted: true, isTimerRunning: false }", () => {
+            const mockDispatch = jest.fn();
+            runTimer()(
+                mockDispatch,
+                () => ({
+                    game: {
+                        isGameStarted: true,
+                        isTimerRunning: false
+                    } as State
+                }),
+                undefined
+            );
+            expect(mockDispatch).toHaveBeenCalled();
+            expect(mockDispatch).toHaveBeenCalledTimes(2);
+        });
+        it("Check action runTimer with state {isGameStarted: true, isTimerRunning: true }", () => {
+            const mockDispatch = jest.fn();
+            runTimer()(
+                mockDispatch,
+                () => ({
+                    game: {
+                        isGameStarted: true,
+                        isTimerRunning: true
+                    } as State
+                }),
+                undefined
+            );
+            expect(mockDispatch).not.toHaveBeenCalled();
+        });
+        it("Check action runTimer with state { isGameStarted: false, isTimerRunning: true }", () => {
+            const mockDispatch = jest.fn();
+            runTimer()(
+                mockDispatch,
+                () => ({
+                    game: {
+                        isGameStarted: false,
+                        isTimerRunning: true
+                    } as State
+                }),
+                undefined
+            );
+            expect(mockDispatch).not.toHaveBeenCalled();
+        });
+
+        it("Check action recursiveUpdate with state { isGameStarted: true, isTimerRunning: true } and the same gameField", () => {
+            jest.useFakeTimers();
+            const mockDispatch = jest.fn();
+
+            recursiveUpdate(baseInitialState.gameField)(
+                mockDispatch,
+                () => ({
+                    game: {
+                        isGameStarted: true,
+                        isTimerRunning: true,
+                        gameField: baseInitialState.gameField
+                    } as State
+                }),
+                undefined
+            );
+            jest.advanceTimersByTime(1000);
+            expect(mockDispatch).toHaveBeenCalledTimes(2);
+        });
+        it("Check action recursiveUpdate with state { isGameStarted: true, isTimerRunning: true } and not the same gameField", () => {
+            jest.useFakeTimers();
+            const mockDispatch = jest.fn();
+            // because here we just compare the pointer i mean the links so, clone the
+            // gameField should point to another space of the memory
+            recursiveUpdate(baseInitialState.gameField)(
+                mockDispatch,
+                () => ({
+                    game: {
+                        isGameStarted: true,
+                        isTimerRunning: true,
+                        gameField: [ ...baseInitialState.gameField ]
+                    } as State
+                }),
+                undefined
+            );
+            jest.advanceTimersByTime(1000);
+            expect(mockDispatch).not.toHaveBeenCalled();
+            expect(mockDispatch).toHaveBeenCalledTimes(0);
+        });
+        it("Check action recursiveUpdate with state { isGameStarted: true, isTimerRunning: false }", () => {
+            jest.useFakeTimers();
+            const mockDispatch = jest.fn();
+
+            recursiveUpdate(baseInitialState.gameField)(
+                mockDispatch,
+                () => ({
+                    game: {
+                        isGameStarted: true,
+                        isTimerRunning: false
+                    } as State
+                }),
+                undefined
+            );
+            jest.advanceTimersByTime(1000);
+            expect(mockDispatch).not.toHaveBeenCalled();
+            expect(mockDispatch).toHaveBeenCalledTimes(0);
+        });
+        it("Check action recursiveUpdate with state { isGameStarted: false }", () => {
+            jest.useFakeTimers();
+            const mockDispatch = jest.fn();
+
+            recursiveUpdate(baseInitialState.gameField)(
+                mockDispatch,
+                () => ({
+                    game: {
+                        isGameStarted: false,
+                    } as State
+                }),
+                undefined
+            );
+            jest.advanceTimersByTime(1000);
+            expect(mockDispatch).not.toHaveBeenCalled();
+            expect(mockDispatch).toHaveBeenCalledTimes(0);
+        });
+    })
 })
