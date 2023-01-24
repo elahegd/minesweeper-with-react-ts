@@ -29,6 +29,6 @@ describe("Grid renders correctly", () => {
 
         const { asFragment } = render(<Grid {...props}>{MockFieldData}</Grid>);
 
-        // expect(asFragment()).toMatchSnapshot();
+        expect(asFragment()).toMatchSnapshot();
     })
 })
