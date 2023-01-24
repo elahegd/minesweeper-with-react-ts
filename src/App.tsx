@@ -1,5 +1,6 @@
 import React, { FC, Suspense, lazy } from 'react';
 import { Provider } from "react-redux";
+import styled from "@emotion/styled";
 import { BrowserRouter as Router, Route, Link, Routes, Navigate, useSearchParams } from "react-router-dom";
 import { Location } from "history";
 
@@ -26,14 +27,14 @@ export const Navigation: FC = () => {
     }
 
     return (
-        <nav>
-            <ul>
-                <li><Link to={getLevelParam("/")}>Home</Link></li>
-                <li><Link to={getLevelParam("/minesweeper/hooks")}>Game With Hooks</Link></li>
-                <li><Link to={getLevelParam("/minesweeper/usereducer")}>Game With Redcer</Link></li>
-                <li><Link to={getLevelParam("/minesweeper/react-redux")}>Game With React-redux</Link></li>
-            </ul>
-        </nav> 
+        <Nav>
+            <NavigationList>
+                <List><Link className="nav-link" to={getLevelParam("/")}>Home</Link></List>
+                <List><Link className="nav-link" to={getLevelParam("/minesweeper/hooks")}>Game With Hooks</Link></List>
+                <List><Link className="nav-link" to={getLevelParam("/minesweeper/usereducer")}>Game With Reducer</Link></List>
+                <List><Link className="nav-link" to={getLevelParam("/minesweeper/react-redux")}>Game With React-redux</Link></List>
+            </NavigationList>
+        </Nav> 
     )
 }
 
@@ -93,6 +94,27 @@ export const App: FC = () => (
     </Router>
 );
 
-export const Home: FC = () => <h2>Mineisdjf</h2>
+export const Home: FC = () => <Text>Welcome to the Minesweeper game</Text>
 
-  
+const Nav = styled.div`
+  background: #f5f5f5;
+  display: flex;
+  max-width: 100%;
+  justify-content: center;
+`;
+
+const NavigationList = styled.div`
+   display: flex;
+   list-style: none;
+   justify-content: space-between;
+`;
+
+const List = styled.li`
+    padding: 10px;
+    text-decoration: none;
+    
+`;
+
+const Text = styled.h2`
+   text-align: center;
+`;
